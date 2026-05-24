@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    root: WARN
+    com.shopgenius: INFO
+    org.springframework.security: INFO
+
+server:
+  tomcat:
+    max-threads: 200
+    connection-timeout: 20000

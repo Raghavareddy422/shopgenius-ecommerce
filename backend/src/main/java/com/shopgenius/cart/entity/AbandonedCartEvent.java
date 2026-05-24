@@ -1,0 +1,43 @@
+package com.shopgenius.cart.entity;
+
+import com.shopgenius.user.entity.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "abandoned_cart_events")
+public class AbandonedCartEvent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "cart_value", nullable = false, precision = 10, scale = 2)
+    private BigDecimal cartValue;
+
+    @Column(name = "incentive_offered")
+    private String incentiveOffered;
+
+    @Builder.Default
+    @Column(name = "is_recovered")
+    private boolean isRecovered = false;
+
+    @Builder.Default
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+}

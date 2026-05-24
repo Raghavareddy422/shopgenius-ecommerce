@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shopgenius-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/shopgenius
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - JWT_SECRET=super_secret_key_for_jwt_auth_must_be_long_enough_for_hmac_sha256
+      - JWT_EXPIRATION=86400000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - shopgenius-net
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: shopgenius-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=shopgenius
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shopgenius"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - shopgenius-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: shopgenius-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - shopgenius-net
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  shopgenius-net:
+    driver: bridge
