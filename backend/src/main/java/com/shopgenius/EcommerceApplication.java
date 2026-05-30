@@ -42,95 +42,99 @@ public class EcommerceApplication {
 
             // Seed Category if empty
             if (categoryRepository.count() == 0) {
-                Category electronics = categoryRepository.save(Category.builder()
+                categoryRepository.save(Category.builder()
                         .name("Electronics")
                         .description("Premium gadgets and electronic devices")
                         .build());
-                Category wearables = categoryRepository.save(Category.builder()
+                categoryRepository.save(Category.builder()
                         .name("Wearables")
                         .description("Smart and stylish wearable accessories")
                         .build());
-                Category clothing = categoryRepository.save(Category.builder()
+                categoryRepository.save(Category.builder()
                         .name("Clothing & Apparel")
                         .description("High-quality sustainable clothing and activewear")
                         .build());
+            }
 
-                // Seed Products
-                if (productRepository.count() == 0) {
-                    productRepository.save(Product.builder()
-                            .sku("ECO-WATCH-01")
-                            .name("EcoSmart Watch Pro")
-                            .description("Sleek smartwatch crafted with 100% recycled aluminum. Features fitness tracking, smart notifications, and up to 7 days battery.")
-                            .price(BigDecimal.valueOf(15999.00))
-                            .costPrice(BigDecimal.valueOf(10000.00))
-                            .stockQuantity(100)
-                            .category(wearables)
-                            .imageUrl("https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80")
-                            .ecoScore(92)
-                            .build());
+            // Seed Products if empty
+            if (productRepository.count() == 0) {
+                Category electronics = categoryRepository.findByName("Electronics").orElse(null);
+                Category wearables = categoryRepository.findByName("Wearables").orElse(null);
+                Category clothing = categoryRepository.findByName("Clothing & Apparel").orElse(null);
 
-                    productRepository.save(Product.builder()
-                            .sku("HP-NOISE-02")
-                            .name("Acoustix ANC Headphones")
-                            .description("High-fidelity active noise cancelling headphones with hybrid drivers and memory foam cups.")
-                            .price(BigDecimal.valueOf(24999.00))
-                            .costPrice(BigDecimal.valueOf(16000.00))
-                            .stockQuantity(50)
-                            .category(electronics)
-                            .imageUrl("https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80")
-                            .ecoScore(78)
-                            .build());
+                productRepository.save(Product.builder()
+                        .sku("ECO-WATCH-01")
+                        .name("EcoSmart Watch Pro")
+                        .description("Sleek smartwatch crafted with 100% recycled aluminum. Features fitness tracking, smart notifications, and up to 7 days battery.")
+                        .price(BigDecimal.valueOf(15999.00))
+                        .costPrice(BigDecimal.valueOf(10000.00))
+                        .stockQuantity(100)
+                        .category(wearables)
+                        .imageUrl("https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80")
+                        .ecoScore(92)
+                        .build());
 
-                    productRepository.save(Product.builder()
-                            .sku("CHG-DOCK-03")
-                            .name("Volt Wireless Charging Dock")
-                            .description("Elegant multi-device charging dock with smart power allocation.")
-                            .price(BigDecimal.valueOf(4999.00))
-                            .costPrice(BigDecimal.valueOf(3000.00))
-                            .stockQuantity(200)
-                            .category(electronics)
-                            .imageUrl("https://images.unsplash.com/photo-1622445262465-2481c4574875?w=500&auto=format&fit=crop&q=80")
-                            .ecoScore(85)
-                            .build());
+                productRepository.save(Product.builder()
+                        .sku("HP-NOISE-02")
+                        .name("Acoustix ANC Headphones")
+                        .description("High-fidelity active noise cancelling headphones with hybrid drivers and memory foam cups.")
+                        .price(BigDecimal.valueOf(24999.00))
+                        .costPrice(BigDecimal.valueOf(16000.00))
+                        .stockQuantity(50)
+                        .category(electronics)
+                        .imageUrl("https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80")
+                        .ecoScore(78)
+                        .build());
 
-                    productRepository.save(Product.builder()
-                            .sku("STAND-LAP-04")
-                            .name("Bamboo Ergonomic Laptop Stand")
-                            .description("Eco-friendly laptop stand made from organic bamboo.")
-                            .price(BigDecimal.valueOf(3999.00))
-                            .costPrice(BigDecimal.valueOf(2400.00))
-                            .stockQuantity(150)
-                            .category(wearables)
-                            .imageUrl("https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&auto=format&fit=crop&q=80")
-                            .ecoScore(98)
-                            .build());
+                productRepository.save(Product.builder()
+                        .sku("CHG-DOCK-03")
+                        .name("Volt Wireless Charging Dock")
+                        .description("Elegant multi-device charging dock with smart power allocation.")
+                        .price(BigDecimal.valueOf(4999.00))
+                        .costPrice(BigDecimal.valueOf(3000.00))
+                        .stockQuantity(200)
+                        .category(electronics)
+                        .imageUrl("https://images.unsplash.com/photo-1622445262465-2481c4574875?w=500&auto=format&fit=crop&q=80")
+                        .ecoScore(85)
+                        .build());
 
-                    productRepository.save(Product.builder()
-                            .sku("CLO-TSHIRT-05")
-                            .name("Organic Cotton T-Shirt")
-                            .description("Premium lightweight tee made of 100% organic cotton. Super breathable and comfortable.")
-                            .price(BigDecimal.valueOf(1299.00))
-                            .costPrice(BigDecimal.valueOf(600.00))
-                            .stockQuantity(150)
-                            .category(clothing)
-                            .imageUrl("https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop&q=80")
-                            .ecoScore(95)
-                            .sizes("S,M,L,XL")
-                            .build());
+                productRepository.save(Product.builder()
+                        .sku("STAND-LAP-04")
+                        .name("Bamboo Ergonomic Laptop Stand")
+                        .description("Eco-friendly laptop stand made from organic bamboo.")
+                        .price(BigDecimal.valueOf(3999.00))
+                        .costPrice(BigDecimal.valueOf(2400.00))
+                        .stockQuantity(150)
+                        .category(wearables)
+                        .imageUrl("https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&auto=format&fit=crop&q=80")
+                        .ecoScore(98)
+                        .build());
 
-                    productRepository.save(Product.builder()
-                            .sku("CLO-JACKET-06")
-                            .name("Classic Denim Jacket")
-                            .description("Heavyweight durable jacket made with recycled denim fibers. A timeless classic design.")
-                            .price(BigDecimal.valueOf(4999.00))
-                            .costPrice(BigDecimal.valueOf(2800.00))
-                            .stockQuantity(80)
-                            .category(clothing)
-                            .imageUrl("https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=500&auto=format&fit=crop&q=80")
-                            .ecoScore(90)
-                            .sizes("M,L,XL")
-                            .build());
-                }
+                productRepository.save(Product.builder()
+                        .sku("CLO-TSHIRT-05")
+                        .name("Organic Cotton T-Shirt")
+                        .description("Premium lightweight tee made of 100% organic cotton. Super breathable and comfortable.")
+                        .price(BigDecimal.valueOf(1299.00))
+                        .costPrice(BigDecimal.valueOf(600.00))
+                        .stockQuantity(150)
+                        .category(clothing)
+                        .imageUrl("https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop&q=80")
+                        .ecoScore(95)
+                        .sizes("S,M,L,XL")
+                        .build());
+
+                productRepository.save(Product.builder()
+                        .sku("CLO-JACKET-06")
+                        .name("Classic Denim Jacket")
+                        .description("Heavyweight durable jacket made with recycled denim fibers. A timeless classic design.")
+                        .price(BigDecimal.valueOf(4999.00))
+                        .costPrice(BigDecimal.valueOf(2800.00))
+                        .stockQuantity(80)
+                        .category(clothing)
+                        .imageUrl("https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=500&auto=format&fit=crop&q=80")
+                        .ecoScore(90)
+                        .sizes("M,L,XL")
+                        .build());
             }
 
             // Seed Coupons if empty
