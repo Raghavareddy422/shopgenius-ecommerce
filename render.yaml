@@ -2,8 +2,6 @@ services:
   - type: web
     name: shopgenius-backend
     runtime: docker
-    dockerContext: backend
-    dockerfilePath: backend/Dockerfile
     plan: free
     envVars:
       - key: SPRING_PROFILES_ACTIVE
