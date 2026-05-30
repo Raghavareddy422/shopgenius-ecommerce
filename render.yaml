@@ -38,6 +38,12 @@ services:
     plan: free
     ipAllowList: []
 
+  - type: web
+    name: shopgenius-frontend
+    env: static
+    publishPath: frontend
+    plan: free
+
 databases:
   - name: shopgenius-db
     plan: free
