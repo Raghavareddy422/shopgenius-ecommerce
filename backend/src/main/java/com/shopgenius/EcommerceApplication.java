@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.boot.CommandLineRunner;
 import com.shopgenius.user.entity.Role;
 import com.shopgenius.user.repository.RoleRepository;
+import com.shopgenius.user.entity.User;
+import com.shopgenius.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.shopgenius.category.entity.Category;
 import com.shopgenius.category.repository.CategoryRepository;
 import com.shopgenius.product.entity.Product;
@@ -32,12 +35,31 @@ public class EcommerceApplication {
             RoleRepository roleRepository,
             CategoryRepository categoryRepository,
             ProductRepository productRepository,
-            CouponRepository couponRepository) {
+            CouponRepository couponRepository,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
         return args -> {
             // Seed Roles if empty
             if (roleRepository.count() == 0) {
                 roleRepository.save(Role.builder().name("ROLE_USER").build());
                 roleRepository.save(Role.builder().name("ROLE_ADMIN").build());
+            }
+
+            // Seed Admin User if not exists
+            if (!userRepository.existsByEmail("admin@shopgenius.com")) {
+                Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElse(null);
+                Role userRole = roleRepository.findByName("ROLE_USER").orElse(null);
+
+                User admin = User.builder()
+                        .firstName("Admin")
+                        .lastName("User")
+                        .email("admin@shopgenius.com")
+                        .password(passwordEncoder.encode("admin123"))
+                        .phoneNumber("1234567890")
+                        .roles(java.util.Set.of(adminRole, userRole))
+                        .isActive(true)
+                        .build();
+                userRepository.save(admin);
             }
 
             // Seed Category if empty
