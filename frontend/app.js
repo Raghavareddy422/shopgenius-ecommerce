@@ -1,8 +1,8 @@
 // app.js - E-commerce SPA Core Router & View Manager (Amazon/Flipkart Style)
 
-const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8080/api'
-    : window.location.origin.replace('frontend', 'backend') + '/api';
+if (typeof API_BASE === 'undefined') {
+    var API_BASE = 'http://localhost:8080/api';
+}
 
 // Global Application State
 const state = {

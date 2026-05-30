@@ -39,8 +39,14 @@ services:
   - type: web
     name: shopgenius-frontend
     runtime: static
-    buildCommand: ""
+    buildCommand: "node build.js"
     staticPublishPath: frontend
+    envVars:
+      - key: API_BASE
+        fromService:
+          name: shopgenius-backend
+          type: web
+          property: url
 
 databases:
   - name: shopgenius-db
