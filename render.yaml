@@ -1,7 +1,7 @@
 services:
   - type: web
     name: shopgenius-backend
-    env: docker
+    runtime: docker
     dockerContext: backend
     dockerfilePath: backend/Dockerfile
     plan: free
