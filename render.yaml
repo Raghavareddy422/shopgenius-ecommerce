@@ -38,12 +38,6 @@ services:
     plan: free
     ipAllowList: []
 
-  - type: web
-    name: shopgenius-frontend
-    runtime: static
-    buildCommand: ""
-    staticPublishPath: frontend
-
 databases:
   - name: shopgenius-db
     plan: free
