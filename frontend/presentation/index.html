@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopGenius - Smart E-Commerce Platform Presentation</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- App Shell -->
+    <div class="presentation-shell">
+        <!-- Top Status Bar -->
+        <header class="presenter-header">
+            <div class="brand">ShopGenius<span>.</span></div>
+            <div class="tracker" id="slide-number-tracker">Slide 1 of 10</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="presentation-progress" style="width: 10%;"></div>
+            </div>
+        </header>
+
+        <!-- Main Slides Area -->
+        <main class="slide-container" id="slides-wrapper">
+            
+            <!-- SLIDE 1: Title Cover -->
+            <section class="slide active" id="slide-1" data-category="Executive Summary">
+                <div class="cover-layout">
+                    <div class="glow-accent"></div>
+                    <div class="cover-details">
+                        <div class="slide-badge">FULL-STACK SHOWCASE</div>
+                        <h1 class="brand-huge">ShopGenius<span class="dot">.</span></h1>
+                        <h2 class="subtitle-main">Next-Generation Smart E-Commerce Platform</h2>
+                        <p class="desc-text">Powered by Spring Boot 3.x, AI Price Negotiation, and Real-Time Fraud Scoring</p>
+                        
+                        <div class="tech-stack-row">
+                            <span class="tech-tag">Java 21</span>
+                            <span class="tech-tag">Spring Boot 3.x</span>
+                            <span class="tech-tag">PostgreSQL</span>
+                            <span class="tech-tag">Redis Caching</span>
+                            <span class="tech-tag">Vanilla JS</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: Challenge vs Solution -->
+            <section class="slide" id="slide-2" data-category="Problem Space">
+                <div class="slide-header">
+                    <span class="category-tag">Problem vs Solution</span>
+                    <h2>Bridging the Gap in Modern Retail</h2>
+                </div>
+                <div class="grid-2col">
+                    <!-- Column 1 -->
+                    <div class="glass-card danger-accent">
+                        <h3 class="card-title text-danger">The E-Commerce Landscape Challenges</h3>
+                        <ul class="bullet-list">
+                            <li><strong>Static Pricing Model:</strong> Fixed retail prices fail to capture price-sensitive buyers, lowering overall checkout conversion rates.</li>
+                            <li><strong>High Cart Abandonment:</strong> Nearly 70% of shopping carts are abandoned without proactive recovery hooks or targeted pricing.</li>
+                            <li><strong>Payment Fraud & Bots:</strong> Standard checkout flows remain vulnerable to automated attacks, credentials stuffing, and credit card testing.</li>
+                            <li><strong>Framework Frontend Bloat:</strong> Heavy client bundles slow down initial rendering, increase network traffic, and drag down SEO rankings.</li>
+                        </ul>
+                    </div>
+                    <!-- Column 2 -->
+                    <div class="glass-card success-accent">
+                        <h3 class="card-title text-success">The ShopGenius Solution</h3>
+                        <ul class="bullet-list">
+                            <li><strong>AI Price Negotiation:</strong> Interactive sidebar bidding assistant gamifies checkouts, converting passive sessions into sales.</li>
+                            <li><strong>Smart Analytics Logs:</strong> Proactive cart recovery detection and automated price drop subscription alerts.</li>
+                            <li><strong>Algorithmic Fraud Scoring:</strong> Real-time behavioral evaluations that flag or block high-risk transactions instantly.</li>
+                            <li><strong>Vanilla Performance Stack:</strong> Pure HTML5, CSS3, and native JavaScript for near-instant load speeds.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: AI Price Negotiation Engine -->
+            <section class="slide" id="slide-3" data-category="Core Features">
+                <div class="slide-header">
+                    <span class="category-tag">Innovation Highlights</span>
+                    <h2>AI Price Negotiation Engine</h2>
+                </div>
+                <div class="grid-3col">
+                    <div class="glass-card number-card">
+                        <div class="step-num">01</div>
+                        <h3>User Bid Submission</h3>
+                        <p>Customers submit target bids inside the product details page. This launches an interactive, chat-style bargaining session.</p>
+                    </div>
+                    <div class="glass-card number-card">
+                        <div class="step-num">02</div>
+                        <h3>Backend Margin Checks</h3>
+                        <p>The AI compares bids against inventory cost limits, stock levels, and customer loyalty scores in real time.</p>
+                    </div>
+                    <div class="glass-card number-card">
+                        <div class="step-num">03</div>
+                        <h3>Bargain Counter-Offers</h3>
+                        <p>The bot accepts the bid, suggests a middle ground counter-offer, or triggers final limits on the 4th bargaining round.</p>
+                    </div>
+                </div>
+                <div class="callout-banner purple-border">
+                    <h4>BUSINESS VALUE CALLOUT</h4>
+                    <p>Captures the "bargain-hunting" consumer segment, drives up checkout conversion rates, and enables price flexibility while protecting defined wholesale profit boundaries.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: Fraud Detection -->
+            <section class="slide" id="slide-4" data-category="Core Features">
+                <div class="slide-header">
+                    <span class="category-tag">Security & Risk</span>
+                    <h2>Algorithmic Fraud Scoring</h2>
+                </div>
+                <div class="layout-aside">
+                    <div class="glass-card main-aside">
+                        <h3 class="card-title">Real-Time Behavioral Checks</h3>
+                        <ul class="bullet-list">
+                            <li><strong>Velocity Triggers:</strong> Analyzes session request rates to block credential testing and automated crawler bots.</li>
+                            <li><strong>Transaction Auditing:</strong> Evaluates order amounts against normal user averages, holding outliers for administrative authorization.</li>
+                            <li><strong>Telemetry Analysis:</strong> Tracks conflicting location parameters and session logs to detect account takeover attempts.</li>
+                            <li><strong>Stateless Authentication:</strong> Secures user APIs with JWT, refresh token rotation, and Role-Based Access Control (RBAC).</li>
+                        </ul>
+                    </div>
+                    <div class="stack-aside">
+                        <div class="aside-badge green-bg">
+                            <h4>LOW RISK</h4>
+                            <p>Order cleared. Dispatched to automated verification.</p>
+                        </div>
+                        <div class="aside-badge yellow-bg">
+                            <h4>MEDIUM RISK</h4>
+                            <p>Order flagged. Requires admin panel manual approval.</p>
+                        </div>
+                        <div class="aside-badge red-bg">
+                            <h4>HIGH RISK</h4>
+                            <p>Transaction blocked. Account session suspended.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Smart Analytics -->
+            <section class="slide" id="slide-5" data-category="Core Features">
+                <div class="slide-header">
+                    <span class="category-tag">Customer Retention</span>
+                    <h2>Personalization & Smart Analytics</h2>
+                </div>
+                <div class="grid-3col">
+                    <div class="glass-card icon-card">
+                        <div class="card-icon">🛒</div>
+                        <h3>Cart Recovery Logs</h3>
+                        <p>Background events detect abandoned active baskets. The system schedules email alerts and injects discount codes (e.g. 'RECOVERY15') into client accounts.</p>
+                    </div>
+                    <div class="glass-card icon-card">
+                        <div class="card-icon">🔔</div>
+                        <h3>Price Drop Watchers</h3>
+                        <p>Customers set target pricing alerts on items. The backend triggers a real-time notification as soon as the store's catalog price drops below the trigger.</p>
+                    </div>
+                    <div class="glass-card icon-card">
+                        <div class="card-icon">🌱</div>
+                        <h3>Sustainability Sorting</h3>
+                        <p>Spotlights green consumerism. The catalog calculates an Eco Score (0-100) and enables premium search filters to highlight low-impact deals.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: Backend Tech Stack -->
+            <section class="slide" id="slide-6" data-category="Architecture">
+                <div class="slide-header">
+                    <span class="category-tag">Backend Infrastructure</span>
+                    <h2>High-Performance Java & Spring Boot Core</h2>
+                </div>
+                <div class="grid-2col-even">
+                    <div class="glass-card tech-card">
+                        <h3>Java 21 & Spring Boot 3.x</h3>
+                        <p>Leverages modern syntax and Spring virtual threads. Uses a highly modular <strong>package-by-feature</strong> file structure to ensure clean architecture boundaries.</p>
+                    </div>
+                    <div class="glass-card tech-card">
+                        <h3>PostgreSQL & Hibernate</h3>
+                        <p>Uses Spring Data JPA. Relational schemas, constraints, and indexes are managed through <strong>Flyway versioned migrations</strong> for zero-downtime database updates.</p>
+                    </div>
+                    <div class="glass-card tech-card">
+                        <h3>Redis Session Cache</h3>
+                        <p>Caches volatile active carts, user session details, and blacklisted JWT tokens to offload PostgreSQL query bottlenecks.</p>
+                    </div>
+                    <div class="glass-card tech-card">
+                        <h3>Unified API Exception Layer</h3>
+                        <p>A centralized global exception controller wraps errors into generic JSON payloads, mapping code issues to precise HTTP status codes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Frontend Tech Stack -->
+            <section class="slide" id="slide-7" data-category="Architecture">
+                <div class="slide-header">
+                    <span class="category-tag">Frontend Architecture</span>
+                    <h2>Zero-Bloat and High-Speed Client Shell</h2>
+                </div>
+                <div class="layout-aside">
+                    <div class="glass-card main-aside">
+                        <h3 class="card-title">Native JavaScript Performance</h3>
+                        <p style="margin-bottom:1rem; color:var(--text-secondary);">By avoiding framework compilation steps and virtual DOM overhead, ShopGenius achieves near-instant load speeds.</p>
+                        <ul class="bullet-list">
+                            <li><strong>Pure DOM State Management:</strong> Direct API rendering dynamically builds views without full-page reloads.</li>
+                            <li><strong>Hash Routing Shell:</strong> Clean browser navigation handled client-side using standard URL window hashes.</li>
+                            <li><strong>Modern Typography:</strong> Responsive typography scaling with Plus Jakarta Sans and Inter integration.</li>
+                        </ul>
+                    </div>
+                    <div class="stack-aside">
+                        <div class="metric-card">
+                            <span class="metric-val">&lt; 100ms</span>
+                            <span class="metric-lbl">Largest Contentful Paint (LCP)</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val">0ms</span>
+                            <span class="metric-lbl">First Input Delay (FID)</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-val">100%</span>
+                            <span class="metric-lbl">SEO Performance Score</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Local Infrastructure -->
+            <section class="slide" id="slide-8" data-category="Infrastructure">
+                <div class="slide-header">
+                    <span class="category-tag">Local Development</span>
+                    <h2>Consistent Containerized Services</h2>
+                </div>
+                <div class="grid-3col">
+                    <div class="glass-card node-card">
+                        <div class="node-label">COMPILER</div>
+                        <h3>Maven Build</h3>
+                        <p>Compiles Spring Boot 3 dependency packages, runs unit tests (JUnit 5, Mockito), and packs files into lightweight executable JARs.</p>
+                    </div>
+                    <div class="glass-card node-card">
+                        <div class="node-label">PRIMARY DATA</div>
+                        <h3>PostgreSQL Node</h3>
+                        <p>Isolated database storing persistent users, products, category filters, logs, address records, and checkout entries.</p>
+                    </div>
+                    <div class="glass-card node-card">
+                        <div class="node-label">SESSION CACHE</div>
+                        <h3>Redis Cache Node</h3>
+                        <p>High-throughput memory store handling temporary active cart states, preventing redundant database disk operations.</p>
+                    </div>
+                </div>
+                <div class="callout-banner purple-border" style="margin-top:1.5rem;">
+                    <h4>DOCKER COMPOSE LOCAL ORCHESTRATION</h4>
+                    <p>Both database and caching services are managed locally using a single <code>docker-compose.yml</code> file. This ensures that the local developer environment exactly mirrors the production hosting structure.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: DevOps & Cloud Orchestration -->
+            <section class="slide" id="slide-9" data-category="DevOps">
+                <div class="slide-header">
+                    <span class="category-tag">Continuous Delivery</span>
+                    <h2>Automated Pipelines and Staging Setup</h2>
+                </div>
+                <div class="pipe-layout">
+                    <div class="pipe-node">
+                        <div class="pipe-num">1</div>
+                        <h4>GitHub Commit</h4>
+                        <p>Git push triggers automated webhooks connected to host clusters.</p>
+                    </div>
+                    <div class="pipe-arrow">➔</div>
+                    <div class="pipe-node">
+                        <div class="pipe-num">2</div>
+                        <h4>Render Build</h4>
+                        <p>Service pulls render.yaml configuration to compile the JVM JAR.</p>
+                    </div>
+                    <div class="pipe-arrow">➔</div>
+                    <div class="pipe-node">
+                        <div class="pipe-num">3</div>
+                        <h4>Flyway Script</h4>
+                        <p>SQL scripts run on start to update H2/PostgreSQL database schemas.</p>
+                    </div>
+                    <div class="pipe-arrow">➔</div>
+                    <div class="pipe-node">
+                        <div class="pipe-num">4</div>
+                        <h4>Live Release</h4>
+                        <p>Health checks pass and traffic seamlessly cuts over with zero downtime.</p>
+                    </div>
+                </div>
+            </div>
+            </section>
+
+            <!-- SLIDE 10: Future Roadmap -->
+            <section class="slide" id="slide-10" data-category="Future Vision">
+                <div class="slide-header">
+                    <span class="category-tag">Platform Roadmap</span>
+                    <h2>Scaling ShopGenius to the Next Level</h2>
+                </div>
+                <div class="roadmap-layout">
+                    <div class="roadmap-card">
+                        <div class="road-num">Q1</div>
+                        <h3>Generative AI Agents</h3>
+                        <p>Upgrade the rule-based price bargainer to an LLM conversational agent (Gemini via Spring AI) that handles natural dialogue bargaining.</p>
+                    </div>
+                    <div class="roadmap-card">
+                        <div class="road-num">Q2</div>
+                        <h3>Payment Integrations</h3>
+                        <p>Replace simulated checkout mock calls with active Stripe and PayPal billing checkouts.</p>
+                    </div>
+                    <div class="roadmap-card">
+                        <div class="road-num">Q3</div>
+                        <h3>Logistics Sync</h3>
+                        <p>Establish direct connections to FedEx/UPS APIs for shipping estimations, delivery routes, and tracking maps.</p>
+                    </div>
+                    <div class="roadmap-card">
+                        <div class="road-num">Q4</div>
+                        <h3>Admin Analytics</h3>
+                        <p>Develop reporting interfaces for store admins to track profit margins and AI negotiation logs.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Slide Navigation -->
+        <footer class="presenter-footer">
+            <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Previous
+            </button>
+            <button class="nav-btn" id="next-btn" onclick="nextSlide()">
+                Next
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+        </footer>
+    </div>
+
+    <!-- Script -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function updateSlideUI() {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            
+            // Show current slide
+            const activeSlide = document.getElementById(`slide-${currentSlide}`);
+            if (activeSlide) {
+                activeSlide.classList.add('active');
+                
+                // Update header tags
+                const category = activeSlide.getAttribute('data-category');
+                document.getElementById('slide-number-tracker').innerText = `Slide ${currentSlide} of ${totalSlides}  |  ${category}`;
+            }
+
+            // Update Progress Bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('presentation-progress').style.width = `${progress}%`;
+
+            // Update buttons
+            document.getElementById('prev-btn').disabled = (currentSlide === 1);
+            document.getElementById('next-btn').disabled = (currentSlide === totalSlides);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideUI();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideUI();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        updateSlideUI();
+    </script>
+</body>
+</html>

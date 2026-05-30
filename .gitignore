@@ -29,3 +29,7 @@ node_modules/
 .project
 .settings/
 .DS_Store
+
+# Local build tools
+maven.zip
+/maven/

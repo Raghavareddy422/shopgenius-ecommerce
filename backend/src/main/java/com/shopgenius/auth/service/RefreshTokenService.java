@@ -4,6 +4,7 @@ import com.shopgenius.auth.entity.RefreshToken;
 import com.shopgenius.auth.repository.RefreshTokenRepository;
 import com.shopgenius.exception.BusinessException;
 import com.shopgenius.user.repository.UserRepository;
+import com.shopgenius.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,17 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public RefreshToken createRefreshToken(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException("User not found"));
+        
+        // Delete existing refresh token for user to avoid unique constraint violation
+        refreshTokenRepository.deleteByUser(user);
+        refreshTokenRepository.flush();
+        
         RefreshToken refreshToken = RefreshToken.builder()
-                .user(userRepository.findById(userId).orElseThrow(() -> new BusinessException("User not found")))
+                .user(user)
                 .token(UUID.randomUUID().toString())
                 .expiryDate(LocalDateTime.now().plusNanos(refreshTokenDurationMs * 1_000_000))
                 .build();
