@@ -23,6 +23,6 @@ public class ProductDto {
     private String categoryName;
     private String imageUrl;
     private int ecoScore;
-    private boolean isActive;
+    private boolean active;
     private String sizes;
 }

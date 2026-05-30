@@ -54,7 +54,7 @@ public class Product {
 
     @Builder.Default
     @Column(name = "is_active")
-    private boolean isActive = true;
+    private boolean active = true;
 
     @Column(name = "sizes")
     private String sizes;
