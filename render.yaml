@@ -40,9 +40,9 @@ services:
 
   - type: web
     name: shopgenius-frontend
-    env: static
-    publishPath: frontend
-    plan: free
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: frontend
 
 databases:
   - name: shopgenius-db
