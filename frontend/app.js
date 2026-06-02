@@ -236,6 +236,8 @@ async function renderView() {
         await renderOrdersView(container);
     } else if (state.activeRoute === 'profile') {
         await renderProfileView(container);
+    } else if (state.activeRoute === 'sell') {
+        await renderSellView(container);
     }
 }
 
@@ -1711,3 +1713,410 @@ async function deletePriceWatch(id) {
         renderView(); // Re-render profile view
     } catch (err) {}
 }
+
+/* ========================================================
+   VIEW: SELLER PORTAL
+   ======================================================== */
+async function renderSellView(container) {
+    if (!state.user) {
+        // Marketing landing page for unregistered/logged-out users
+        container.innerHTML = `
+            <div style="max-width: 900px; margin: 2rem auto; text-align: center; padding: 3rem 1.5rem;" class="content-box">
+                <h1 style="font-family: var(--font-head); font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">Sell on ShopGenius</h1>
+                <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto 2.5rem auto; line-height: 1.6;">
+                    Unlock next-generation automated AI negotiations. List your products and let our intelligent bargainer interact with millions of buyers in real-time.
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; text-align: left;">
+                    <div style="background: var(--body-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</div>
+                        <h4 style="font-family: var(--font-head); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text-primary);">AI Negotiation Desk</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Set your cost margins and let our AI negotiate directly with customers to close sales faster.</p>
+                    </div>
+                    <div style="background: var(--body-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                        <h4 style="font-family: var(--font-head); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text-primary);">Detailed Sales Analytics</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Monitor your revenue, average margins, order fullfillment, and inventory health in real-time.</p>
+                    </div>
+                    <div style="background: var(--body-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌱</div>
+                        <h4 style="font-family: var(--font-head); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text-primary);">Eco Score Highlights</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Highlight sustainable items. Products with higher Eco Scores receive premium visibility on the site.</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="navigate('auth')" style="width: 240px; margin: 0 auto; font-size: 15px; font-weight: 700; height: 46px; border-radius: 6px;">Sign In to Start Selling</button>
+            </div>
+        `;
+        return;
+    }
+
+    // Authenticated Seller Dashboard
+    try {
+        if (state.categories.length === 0) {
+            const catRes = await apiCall('/categories?size=50');
+            state.categories = catRes.data.content || [];
+        }
+
+        const dashRes = await apiCall('/seller/dashboard');
+        const dash = dashRes.data;
+
+        const prodRes = await apiCall('/seller/products?size=100');
+        const products = prodRes.data.content || [];
+
+        container.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h1 style="font-family: var(--font-head); font-size: 2rem; font-weight: 800; color: var(--text-primary);">Seller Hub</h1>
+                    <p style="color: var(--text-secondary); font-size: 13.5px; margin-top: 4px;">Welcome back, ${state.user.firstName}! Track your listings, view performance and process sales.</p>
+                </div>
+                <button class="btn btn-primary" onclick="openSellerProductForm()" style="width: auto; padding: 0 1.5rem; height: 40px; border-radius: 6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="margin-right: 6px;">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    List New Product
+                </button>
+            </div>
+
+            <div class="cart-layout" style="grid-template-columns: 1fr 340px; gap: 2rem; display: grid;">
+                <!-- Main Area -->
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    
+                    <!-- Listings Table Box -->
+                    <div class="content-box">
+                        <h3 style="font-family: var(--font-head); font-size: 16px; font-weight: 700; margin-bottom: 1.25rem;">Active Inventory Listings (${products.length})</h3>
+                        
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-secondary); font-weight: 600;">
+                                        <th style="padding: 10px 8px;">Product</th>
+                                        <th style="padding: 10px 8px;">SKU</th>
+                                        <th style="padding: 10px 8px;">Price</th>
+                                        <th style="padding: 10px 8px;">Stock</th>
+                                        <th style="padding: 10px 8px; text-align: center;">Eco Rating</th>
+                                        <th style="padding: 10px 8px; text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${products.map(p => `
+                                        <tr style="border-bottom: 1px solid var(--border-color); transition: var(--transition);" class="hover-row">
+                                            <td style="padding: 12px 8px; display: flex; align-items: center; gap: 0.75rem;">
+                                                <img src="${p.imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&auto=format&fit=crop&q=80'}" style="width: 38px; height: 38px; object-fit: contain; border-radius: 4px; border: 1px solid var(--border-color); background: #fafafa;">
+                                                <div style="font-weight: 600; color: var(--text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 180px;">${p.name}</div>
+                                            </td>
+                                            <td style="padding: 12px 8px; font-family: monospace; font-weight: bold; color: var(--text-secondary);">${p.sku}</td>
+                                            <td style="padding: 12px 8px; font-weight: 700; color: var(--text-primary);">₹${p.price.toFixed(2)}</td>
+                                            <td style="padding: 12px 8px;">
+                                                <span style="font-weight: 700; color: ${p.stockQuantity > 5 ? 'var(--success)' : 'var(--danger)'};">
+                                                    ${p.stockQuantity}
+                                                </span>
+                                            </td>
+                                            <td style="padding: 12px 8px; text-align: center;">
+                                                <span style="background: var(--success-bg); color: var(--success); font-weight: bold; padding: 2px 8px; border-radius: 12px; font-size: 11px;">🌱 ${p.ecoScore || 50}</span>
+                                            </td>
+                                            <td style="padding: 12px 8px; text-align: right;">
+                                                <button class="btn btn-outline" onclick="openSellerProductForm('${p.id}')" style="display: inline-flex; width: auto; height: 28px; font-size: 11px; padding: 0 8px; border-radius: 4px; margin-right: 4px;">Edit</button>
+                                                <button class="btn btn-outline" onclick="deleteSellerProduct('${p.id}')" style="display: inline-flex; width: auto; height: 28px; font-size: 11px; padding: 0 8px; border-radius: 4px; border-color: rgba(239,68,68,0.2); color: var(--danger);">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                    ${products.length === 0 ? `
+                                        <tr>
+                                            <td colspan="6" style="padding: 2.5rem; text-align: center; color: var(--text-secondary);">
+                                                No listings active yet. Click "+ List New Product" to list your first item!
+                                            </td>
+                                        </tr>
+                                    ` : ''}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Sales Box -->
+                    <div class="content-box">
+                        <h3 style="font-family: var(--font-head); font-size: 16px; font-weight: 700; margin-bottom: 1.25rem;">Recent Sales & Customer Orders</h3>
+                        
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-secondary); font-weight: 600;">
+                                        <th style="padding: 10px 8px;">Order ID</th>
+                                        <th style="padding: 10px 8px;">Product</th>
+                                        <th style="padding: 10px 8px;">Quantity</th>
+                                        <th style="padding: 10px 8px;">Total</th>
+                                        <th style="padding: 10px 8px;">Buyer</th>
+                                        <th style="padding: 10px 8px;">Date</th>
+                                        <th style="padding: 10px 8px; text-align: right;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${dash.recentSales.map(s => {
+                                        const dateStr = new Date(s.orderDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+                                        let statusColor = 'var(--text-secondary)';
+                                        if (s.status === 'PAID' || s.status === 'DELIVERED' || s.status === 'SHIPPED') statusColor = 'var(--success)';
+                                        if (s.status === 'PENDING') statusColor = 'var(--warning)';
+                                        if (s.status === 'CANCELLED') statusColor = 'var(--danger)';
+
+                                        return `
+                                            <tr style="border-bottom: 1px solid var(--border-color); transition: var(--transition);" class="hover-row">
+                                                <td style="padding: 12px 8px; font-family: monospace; font-size: 12px; color: var(--text-secondary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 80px;">${s.orderId}</td>
+                                                <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">${s.productName}</td>
+                                                <td style="padding: 12px 8px; text-align: center; font-weight: 600;">${s.quantity}</td>
+                                                <td style="padding: 12px 8px; font-weight: 700; color: var(--text-primary);">₹${(s.price * s.quantity).toFixed(2)}</td>
+                                                <td style="padding: 12px 8px; color: var(--text-primary); font-weight: 500;">${s.buyerName}</td>
+                                                <td style="padding: 12px 8px; color: var(--text-secondary);">${dateStr}</td>
+                                                <td style="padding: 12px 8px; text-align: right; font-weight: bold; color: ${statusColor}; font-size: 11px; text-transform: uppercase;">${s.status}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                    ${dash.recentSales.length === 0 ? `
+                                        <tr>
+                                            <td colspan="7" style="padding: 2.5rem; text-align: center; color: var(--text-secondary);">
+                                                No sale activities recorded. Once buyers order your products, they will appear here.
+                                            </td>
+                                        </tr>
+                                    ` : ''}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Box -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    
+                    <!-- Stats Card -->
+                    <div class="content-box" style="background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy-subnav) 100%); color: white; display: flex; flex-direction: column; gap: 1.5rem;">
+                        <h4 style="font-family: var(--font-head); font-weight: 700; font-size: 14px; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: -0.5rem;">Business Performance</h4>
+                        
+                        <div style="display: flex; flex-direction: column; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem;">
+                            <span style="font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Gross Sales Revenue</span>
+                            <span style="font-size: 2rem; font-weight: 800; font-family: var(--font-head); color: white; margin-top: 4px;">₹${dash.totalRevenue.toFixed(2)}</span>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem;">
+                            <span style="font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Total Items Dispatched</span>
+                            <span style="font-size: 1.5rem; font-weight: 700; font-family: var(--font-head); color: white; margin-top: 4px;">${dash.totalItemsSold} items</span>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase;">Active Catalog Items</span>
+                            <span style="font-size: 1.5rem; font-weight: 700; font-family: var(--font-head); color: white; margin-top: 4px;">${dash.totalProducts} listings</span>
+                        </div>
+                    </div>
+
+                    <!-- Alerts Card -->
+                    <div class="content-box">
+                        <h4 style="font-family: var(--font-head); font-weight: 700; font-size: 14px; margin-bottom: 1rem; color: var(--text-primary);">Inventory Alerts</h4>
+                        
+                        ${dash.lowStockProducts.length > 0 ? `
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                ${dash.lowStockProducts.map(lp => `
+                                    <div style="border: 1px solid rgba(239, 68, 68, 0.15); background: var(--danger-bg); padding: 10px 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px;">
+                                        <div>
+                                            <strong style="color: var(--text-primary); display: block;">${lp.name}</strong>
+                                            <span style="color: var(--text-secondary); font-size: 11px;">SKU: ${lp.sku}</span>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <span style="color: var(--danger); font-weight: 800; font-size: 13px;">Stock: ${lp.stockQuantity}</span>
+                                            <span style="display: block; font-size: 10px; color: var(--primary); font-weight: bold; cursor: pointer;" onclick="openSellerProductForm('${lp.id}')">Restock</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : `
+                            <div style="border: 1px solid rgba(16, 185, 129, 0.15); background: var(--success-bg); padding: 12px; border-radius: 8px; text-align: center; color: var(--success); font-size: 13px; font-weight: 600;">
+                                🌱 All listings healthy. No stock alerts.
+                            </div>
+                        `}
+                    </div>
+
+                </div>
+            </div>
+        `;
+
+    } catch (err) {
+        container.innerHTML = `<div style="text-align:center; padding: 4rem; color:var(--danger)">Error loading Seller Dashboard. Please retry.</div>`;
+    }
+}
+
+// Global scope helpers for Seller Dashboard management
+async function openSellerProductForm(productId = null) {
+    const modal = document.getElementById('seller-product-modal');
+    const content = document.getElementById('seller-product-modal-content');
+    if (!modal || !content) return;
+
+    let prod = null;
+    if (productId) {
+        try {
+            // Find locally or query
+            const res = await apiCall(`/products/${productId}`);
+            prod = res.data;
+        } catch (err) {
+            showToast("Failed to fetch product information.", "error");
+            return;
+        }
+    }
+
+    const title = prod ? 'Edit Listed Product' : 'List a New Product';
+    const skuAttr = prod ? 'disabled' : 'required';
+
+    content.innerHTML = `
+        <button class="close-btn" onclick="closeSellerProductForm()">✕</button>
+        <h2 style="font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; color: var(--text-primary);">${title}</h2>
+        
+        <form onsubmit="handleSellerProductSubmit(event, ${prod ? `'` + prod.id + `'` : 'null'})" style="display: flex; flex-direction: column; gap: 1rem;">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-weight: 700;">Product Name*</label>
+                    <input type="text" id="sel-prod-name" class="form-input" required value="${prod ? prod.name : ''}" placeholder="e.g. EcoSmart Watch Pro">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-weight: 700;">Product SKU* (Unique)</label>
+                    <input type="text" id="sel-prod-sku" class="form-input" ${skuAttr} value="${prod ? prod.sku : ''}" placeholder="e.g. ECO-WATCH-01">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-weight: 700;">Description</label>
+                <textarea id="sel-prod-desc" class="form-input" style="height: 80px; resize: none; padding-top: 8px;" placeholder="Describe your product's key features, specifications, and sustainability elements...">${prod && prod.description ? prod.description : ''}</textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-weight: 700;">Listing Price* (₹)</label>
+                    <input type="number" id="sel-prod-price" class="form-input" required step="0.01" min="0.01" value="${prod ? prod.price : ''}" placeholder="15999">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-weight: 700;">Cost Price* (₹)</label>
+                    <input type="number" id="sel-prod-cost" class="form-input" required step="0.01" min="0.01" value="${prod && prod.costPrice ? prod.costPrice : ''}" placeholder="10000">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-weight: 700;">Stock Quantity*</label>
+                    <input type="number" id="sel-prod-stock" class="form-input" required min="0" value="${prod ? prod.stockQuantity : '10'}" placeholder="100">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-weight: 700;">Category*</label>
+                    <select id="sel-prod-category" class="form-input" required style="outline: none; padding: 0 10px;">
+                        <option value="">Select Category</option>
+                        ${state.categories.map(c => `
+                            <option value="${c.id}" ${prod && prod.categoryId === c.id ? 'selected' : ''}>${c.name}</option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-weight: 700;">Eco Score Rating (0-100)</label>
+                    <input type="number" id="sel-prod-eco" class="form-input" min="0" max="100" value="${prod ? prod.ecoScore : '50'}" placeholder="e.g. 90">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Available Sizes (Comma Separated)</label>
+                    <input type="text" id="sel-prod-sizes" class="form-input" value="${prod && prod.sizes ? prod.sizes : ''}" placeholder="e.g. S,M,L,XL">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Image URL</label>
+                    <input type="url" id="sel-prod-image" class="form-input" value="${prod && prod.imageUrl ? prod.imageUrl : ''}" placeholder="https://images.unsplash.com/...">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+                <button type="button" class="btn btn-outline" onclick="closeSellerProductForm()" style="width: 100px; height: 40px; border-radius: 6px;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="width: 140px; height: 40px; border-radius: 6px;">Submit Listing</button>
+            </div>
+        </form>
+    `;
+
+    modal.classList.add('active');
+}
+
+function closeSellerProductForm() {
+    const modal = document.getElementById('seller-product-modal');
+    if (modal) modal.classList.remove('active');
+}
+
+async function handleSellerProductSubmit(e, productId) {
+    e.preventDefault();
+
+    const name = document.getElementById('sel-prod-name').value.trim();
+    const sku = document.getElementById('sel-prod-sku')?.value?.trim() || '';
+    const description = document.getElementById('sel-prod-desc').value.trim();
+    const price = parseFloat(document.getElementById('sel-prod-price').value);
+    const costPrice = parseFloat(document.getElementById('sel-prod-cost').value);
+    const stockQuantity = parseInt(document.getElementById('sel-prod-stock').value);
+    const categoryId = document.getElementById('sel-prod-category').value;
+    const ecoScore = parseInt(document.getElementById('sel-prod-eco').value);
+    const sizes = document.getElementById('sel-prod-sizes').value.trim();
+    const imageUrl = document.getElementById('sel-prod-image').value.trim();
+
+    if (costPrice >= price) {
+        showToast("Cost price must be lower than selling price to permit negotiations.", "warning");
+        return;
+    }
+
+    const payload = {
+        name,
+        sku,
+        description,
+        price,
+        costPrice,
+        stockQuantity,
+        categoryId,
+        ecoScore,
+        sizes,
+        imageUrl
+    };
+
+    try {
+        if (productId) {
+            // Update
+            await apiCall(`/seller/products/${productId}`, {
+                method: 'PUT',
+                body: payload
+            });
+            showToast("Product listing updated successfully!", "success");
+        } else {
+            // Create
+            await apiCall('/seller/products', {
+                method: 'POST',
+                body: payload
+            });
+            showToast("New product listed for sale!", "success");
+        }
+        closeSellerProductForm();
+        state.products = []; // clear cache to force catalog reload
+        renderView(); // Refresh Dashboard
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function deleteSellerProduct(productId) {
+    if (!confirm("Are you sure you want to permanently delete this listing?")) return;
+
+    try {
+        await apiCall(`/seller/products/${productId}`, {
+            method: 'DELETE'
+        });
+        showToast("Product listing deleted successfully.", "info");
+        state.products = []; // clear cache
+        renderView(); // Refresh Dashboard
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+// Expose functions globally to prevent scoping issues in HTML onclicks
+window.renderSellView = renderSellView;
+window.openSellerProductForm = openSellerProductForm;
+window.closeSellerProductForm = closeSellerProductForm;
+window.handleSellerProductSubmit = handleSellerProductSubmit;
+window.deleteSellerProduct = deleteSellerProduct;
+

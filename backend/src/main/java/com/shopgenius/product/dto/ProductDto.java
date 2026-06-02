@@ -25,4 +25,6 @@ public class ProductDto {
     private int ecoScore;
     private boolean active;
     private String sizes;
+    private UUID sellerId;
+    private String sellerName;
 }

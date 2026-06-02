@@ -45,6 +45,10 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private com.shopgenius.user.entity.User seller;
+
     @Column(name = "image_url")
     private String imageUrl;
 

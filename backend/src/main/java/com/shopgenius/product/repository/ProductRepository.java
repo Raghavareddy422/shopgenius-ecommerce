@@ -15,4 +15,11 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Page<Product> findByCategoryId(UUID categoryId, Pageable pageable);
     
     Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    Page<Product> findBySellerId(UUID sellerId, Pageable pageable);
+
+    long countBySellerId(UUID sellerId);
+
+    @org.springframework.data.jpa.repository.Query("SELECT p FROM Product p WHERE p.seller.id = :sellerId AND p.stockQuantity < :threshold")
+    java.util.List<Product> findLowStockProducts(@org.springframework.data.repository.query.Param("sellerId") UUID sellerId, @org.springframework.data.repository.query.Param("threshold") int threshold);
 }

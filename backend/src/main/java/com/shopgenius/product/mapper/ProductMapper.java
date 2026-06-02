@@ -11,5 +11,7 @@ public interface ProductMapper {
 
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "seller.id", target = "sellerId")
+    @Mapping(expression = "java(product.getSeller() != null ? product.getSeller().getFirstName() + \" \" + product.getSeller().getLastName() : \"ShopGenius\")", target = "sellerName")
     ProductDto toDto(Product product);
 }

@@ -2,11 +2,14 @@ package com.shopgenius.payment.service;
 
 import com.shopgenius.exception.BusinessException;
 import com.shopgenius.order.entity.Order;
+import com.shopgenius.order.entity.OrderItem;
 import com.shopgenius.order.repository.OrderRepository;
 import com.shopgenius.payment.dto.PaymentRequestDto;
 import com.shopgenius.payment.dto.PaymentResponseDto;
 import com.shopgenius.payment.entity.Payment;
 import com.shopgenius.payment.repository.PaymentRepository;
+import com.shopgenius.product.entity.Product;
+import com.shopgenius.product.repository.ProductRepository;
 import com.shopgenius.user.entity.User;
 import com.shopgenius.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public PaymentResponseDto processPayment(UUID userId, PaymentRequestDto request) {
@@ -36,6 +40,24 @@ public class PaymentService {
 
         if (!order.getStatus().equals("PENDING") && !order.getStatus().equals("FAILED")) {
             throw new BusinessException("Order cannot be paid for. Current status: " + order.getStatus(), HttpStatus.BAD_REQUEST);
+        }
+
+        // If the order was previously FAILED and we are retrying, we must check and re-deduct stock
+        boolean isRetry = order.getStatus().equals("FAILED");
+        if (isRetry) {
+            // Check stock first
+            for (OrderItem item : order.getOrderItems()) {
+                Product product = item.getProduct();
+                if (product.getStockQuantity() < item.getQuantity()) {
+                    throw new BusinessException("Not enough stock for " + product.getName() + " to retry payment.", HttpStatus.BAD_REQUEST);
+                }
+            }
+            // Deduct stock
+            order.getOrderItems().forEach(item -> {
+                Product product = item.getProduct();
+                product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+                productRepository.save(product);
+            });
         }
 
         // Mock payment logic
@@ -63,6 +85,12 @@ public class PaymentService {
             }
         } else {
             order.setStatus("FAILED");
+            // Revert stock since payment failed
+            order.getOrderItems().forEach(item -> {
+                Product product = item.getProduct();
+                product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                productRepository.save(product);
+            });
         }
         orderRepository.save(order);
 
